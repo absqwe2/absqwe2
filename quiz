@@ -1,0 +1,77 @@
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
+
+const questions = [
+  {
+    question: 'What is the capital of France?',
+    options: ['Paris', 'London', 'Berlin', 'Madrid'],
+    answer: 0,
+  },
+  {
+    question: 'Which planet is known as the Red Planet?',
+    options: ['Mars', 'Venus', 'Mercury', 'Jupiter'],
+    answer: 0,
+  },
+  {
+    question: 'What is the chemical symbol for hydrogen?',
+    options: ['H', 'O', 'He', 'C'],
+    answer: 0,
+  },
+];
+
+export default function App() {
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [score, setScore] = useState(0);
+
+  const handleOptionPress = (selectedOptionIndex) => {
+    const question = questions[currentQuestion];
+
+    if (question.answer === selectedOptionIndex) {
+      setScore((prevScore) => prevScore + 1);
+    }
+  };
+
+  const handleNextButtonPress = () => {
+    setCurrentQuestion((prevQuestion) => prevQuestion + 1);
+  };
+
+  const handleSubmitButtonPress = () => {
+    const percentage = (score / questions.length) * 100;
+    let feedback = '';
+    if (percentage >= 70) {
+      feedback = 'Excellent!';
+    } else {
+      feedback = 'You can do better!';
+    }
+
+    alert(`Your score: ${percentage.toFixed(2)}%. ${feedback}`);
+  };
+
+  if (currentQuestion >= questions.length) {
+    return (
+      <View>
+        <Text>Your score: {(score / questions.length) * 100}%</Text>
+        <TouchableOpacity onPress={handleSubmitButtonPress}>
+          <Text>Submit</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  const question = questions[currentQuestion];
+
+  return (
+    <View>
+      <Text>{question.question}</Text>
+      {question.options.map((option, index) => (
+        <TouchableOpacity key={index} onPress={() => handleOptionPress(index)}>
+          <Text>{option}</Text>
+        </TouchableOpacity>
+      ))}
+      <TouchableOpacity onPress={handleNextButtonPress}>
+        <Text>Next</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
